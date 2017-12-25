@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiplayerShooter.Server", "MultiplayerShooter.Server\MultiplayerShooter.Server.csproj", "{7ADDF2D2-126F-4673-8105-A50597AE8670}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiplayerShooter.Library", "MultiplayerShooter.Library\MultiplayerShooter.Library.csproj", "{EEC3D8D9-0199-43DB-9FC1-768E44AD3692}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nez", "..\Nez\Nez.Portable\Nez.csproj", "{60B7197D-D0D5-405C-90A2-A56903E9B039}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiplayerShooter.Client", "MultiplayerShooter.Client\MultiplayerShooter.Client.csproj", "{28117AD0-7A6C-4E76-B065-5D929DD9D304}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7ADDF2D2-126F-4673-8105-A50597AE8670}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ADDF2D2-126F-4673-8105-A50597AE8670}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ADDF2D2-126F-4673-8105-A50597AE8670}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ADDF2D2-126F-4673-8105-A50597AE8670}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEC3D8D9-0199-43DB-9FC1-768E44AD3692}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEC3D8D9-0199-43DB-9FC1-768E44AD3692}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEC3D8D9-0199-43DB-9FC1-768E44AD3692}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEC3D8D9-0199-43DB-9FC1-768E44AD3692}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60B7197D-D0D5-405C-90A2-A56903E9B039}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60B7197D-D0D5-405C-90A2-A56903E9B039}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60B7197D-D0D5-405C-90A2-A56903E9B039}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60B7197D-D0D5-405C-90A2-A56903E9B039}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28117AD0-7A6C-4E76-B065-5D929DD9D304}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28117AD0-7A6C-4E76-B065-5D929DD9D304}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28117AD0-7A6C-4E76-B065-5D929DD9D304}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28117AD0-7A6C-4E76-B065-5D929DD9D304}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
