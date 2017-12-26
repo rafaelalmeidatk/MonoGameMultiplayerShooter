@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using MultiplayerShooter.Client.Components.Battle;
 using MultiplayerShooter.Client.FSM;
 using MultiplayerShooter.Client.Managers;
 using Nez;

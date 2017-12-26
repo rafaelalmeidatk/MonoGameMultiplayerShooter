@@ -48,13 +48,13 @@ namespace MultiplayerShooter.Server
 
                 while (lastInterationTime + stepSize < DateTime.Now)
                 {
-                    Run(stepSize.Milliseconds);
+                    Run((float)stepSize.TotalSeconds);
                     lastInterationTime += stepSize;
                 }
             }
         }
 
-        private void Run(double gameTime)
+        private void Run(float gameTime)
         {
             // update all players positions
             var command = new AllPlayersCommand();

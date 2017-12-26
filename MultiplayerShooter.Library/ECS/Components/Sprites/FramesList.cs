@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Nez;
 
-namespace MultiplayerShooter.Client.Components.Sprites
+namespace MultiplayerShooter.Library.ECS.Components.Sprites
 {
     public class FramesList
     {

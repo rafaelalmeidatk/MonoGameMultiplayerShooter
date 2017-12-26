@@ -2,12 +2,12 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MultiplayerShooter.Client.Components.Colliders;
+using MultiplayerShooter.Library.ECS.Components.Colliders;
 using Nez;
 using Nez.Sprites;
 using Nez.Textures;
 
-namespace MultiplayerShooter.Client.Components.Sprites
+namespace MultiplayerShooter.Library.ECS.Components.Sprites
 {
     public class AnimatedSprite : Sprite, IUpdatable
     {

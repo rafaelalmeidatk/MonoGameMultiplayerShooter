@@ -1,8 +1,9 @@
-﻿using MultiplayerShooter.Client.Components.Battle;
-using MultiplayerShooter.Client.Scenes;
+﻿using MultiplayerShooter.Client.Scenes;
 using Nez;
 using Nez.ECS.Components.Physics.Colliders;
 using System;
+using MultiplayerShooter.Library;
+using MultiplayerShooter.Library.ECS.Components.Battle;
 
 namespace MultiplayerShooter.Client.Systems
 {
@@ -26,8 +27,8 @@ namespace MultiplayerShooter.Client.Systems
             var newPosition = entity.position;
 
             var flag = 1 << (projectileComponent.Data.FromPlayerId == 0
-                           ? SceneMap.PLAYER_LAYER
-                           : SceneMap.ENEMY_LAYER);
+                           ? GlobalConstants.PLAYER_LAYER
+                           : GlobalConstants.ENEMY_LAYER);
 
             var linecast = Physics.linecast(lastPosition, newPosition, flag);
             if (linecast.collider != null)

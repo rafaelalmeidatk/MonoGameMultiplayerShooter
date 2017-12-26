@@ -2,7 +2,7 @@
 using Nez;
 using Nez.Tiled;
 
-namespace MultiplayerShooter.Client.Components
+namespace MultiplayerShooter.Library.ECS.Components
 {
     public class PlatformerObject : Component, IUpdatable
     {

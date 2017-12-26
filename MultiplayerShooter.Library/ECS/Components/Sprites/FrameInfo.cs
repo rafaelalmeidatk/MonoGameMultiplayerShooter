@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using MultiplayerShooter.Client.Components.Colliders;
+using MultiplayerShooter.Library.ECS.Components.Colliders;
 using Nez.Textures;
 
-namespace MultiplayerShooter.Client.Components.Sprites
+namespace MultiplayerShooter.Library.ECS.Components.Sprites
 {
     public class FrameInfo
     {

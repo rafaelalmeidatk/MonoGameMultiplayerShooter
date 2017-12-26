@@ -35,6 +35,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Desktop\lidgren-network-gen3-master\lidgren-network-gen3-master\Lidgren.Network\bin\Debug\Lidgren.Network.dll</HintPath>
     </Reference>
+    <Reference Include="MonoGame.Framework, Version=3.7.0.1156, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,6 +49,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ECS\Components\Battle\BattleComponent.cs" />
+    <Compile Include="ECS\Components\Battle\Enemies\EnemyPlaceholderComponent.cs" />
+    <Compile Include="ECS\Components\Battle\EnemyComponent.cs" />
+    <Compile Include="ECS\Components\Battle\HitscanComponent.cs" />
+    <Compile Include="ECS\Components\Battle\ProjectileComponent.cs" />
+    <Compile Include="ECS\Components\CharacterComponent.cs" />
+    <Compile Include="ECS\Components\Colliders\AreaOfSightCollider.cs" />
+    <Compile Include="ECS\Components\Colliders\AttackCollider.cs" />
+    <Compile Include="ECS\Components\Colliders\HurtCollider.cs" />
+    <Compile Include="ECS\Components\Colliders\InteractionCollider.cs" />
+    <Compile Include="ECS\Components\NetworkComponent.cs" />
+    <Compile Include="ECS\Components\PlatformerObject.cs" />
+    <Compile Include="ECS\Components\Sprites\AnimatedSprite.cs" />
+    <Compile Include="ECS\Components\Sprites\FrameInfo.cs" />
+    <Compile Include="ECS\Components\Sprites\FramesList.cs" />
     <Compile Include="GlobalConstants.cs" />
     <Compile Include="Networking\PacketIO\AllPlayersPacketIO.cs" />
     <Compile Include="Networking\PacketIO\CreateProjectilePacketIO.cs" />
@@ -60,5 +79,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Nez\Nez.Portable\Nez.csproj">
+      <Project>{60b7197d-d0d5-405c-90a2-a56903e9b039}</Project>
+      <Name>Nez</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

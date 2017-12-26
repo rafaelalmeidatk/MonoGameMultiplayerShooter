@@ -1,7 +1,7 @@
 ﻿
 
 
-namespace Nez
+namespace MultiplayerShooter.Client
 {
     class Content
     {

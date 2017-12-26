@@ -46,24 +46,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Components\Battle\BattleComponent.cs" />
-    <Compile Include="Components\Battle\Enemies\EnemyPlaceholderComponent.cs" />
-    <Compile Include="Components\Battle\EnemyComponent.cs" />
-    <Compile Include="Components\Battle\HitscanComponent.cs" />
-    <Compile Include="Components\Battle\ProjectileComponent.cs" />
-    <Compile Include="Components\CharacterComponent.cs" />
-    <Compile Include="Components\Colliders\AreaOfSightCollider.cs" />
-    <Compile Include="Components\Colliders\AttackCollider.cs" />
-    <Compile Include="Components\Colliders\HurtCollider.cs" />
-    <Compile Include="Components\InteractionCollider.cs" />
-    <Compile Include="Components\NetworkComponent.cs" />
-    <Compile Include="Components\PlatformerObject.cs" />
     <Compile Include="Components\Player\PlayerComponent.cs" />
     <Compile Include="Components\Player\PlayerController.cs" />
     <Compile Include="Components\Player\PlayerStates.cs" />
-    <Compile Include="Components\Sprites\AnimatedSprite.cs" />
-    <Compile Include="Components\Sprites\FrameInfo.cs" />
-    <Compile Include="Components\Sprites\FramesList.cs" />
     <Compile Include="Components\Windows\TextWindowComponent.cs" />
     <Compile Include="Components\Windows\Windowskin.cs" />
     <Compile Include="Components\Windows\WindowSprite.cs" />

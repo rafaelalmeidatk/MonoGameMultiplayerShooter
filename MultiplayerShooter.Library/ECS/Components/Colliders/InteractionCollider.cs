@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
 
-namespace MultiplayerShooter.Client.Components
+namespace MultiplayerShooter.Library.ECS.Components.Colliders
 {
-    class InteractionCollider : BoxCollider
+    public class InteractionCollider : BoxCollider
     {
         public InteractionCollider(float x, float y, float width, float height) : base(x, y, width, height)
         { }

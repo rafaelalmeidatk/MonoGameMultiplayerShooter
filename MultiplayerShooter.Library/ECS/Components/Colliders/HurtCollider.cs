@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
 
-namespace MultiplayerShooter.Client.Components.Colliders
+namespace MultiplayerShooter.Library.ECS.Components.Colliders
 {
-    class HurtCollider : BoxCollider
+    public class HurtCollider : BoxCollider
     {
         private Vector2 _originalLocalOffset;
 

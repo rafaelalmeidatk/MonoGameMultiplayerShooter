@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
 
-namespace MultiplayerShooter.Client.Components.Battle
+namespace MultiplayerShooter.Library.ECS.Components.Battle
 {
     public class HitscanComponent : Component
     {

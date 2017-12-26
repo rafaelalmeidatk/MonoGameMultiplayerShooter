@@ -5,13 +5,14 @@ using Lidgren.Network;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MultiplayerShooter.Client.Components;
-using MultiplayerShooter.Client.Components.Battle;
 using MultiplayerShooter.Client.Components.Player;
-using MultiplayerShooter.Client.Components.Sprites;
 using MultiplayerShooter.Client.Components.Windows;
 using MultiplayerShooter.Client.Managers;
 using MultiplayerShooter.Client.Systems;
 using MultiplayerShooter.Library;
+using MultiplayerShooter.Library.ECS.Components;
+using MultiplayerShooter.Library.ECS.Components.Battle;
+using MultiplayerShooter.Library.ECS.Components.Sprites;
 using MultiplayerShooter.Library.Projectiles;
 using Nez;
 using Nez.Tiled;
@@ -20,32 +21,6 @@ namespace MultiplayerShooter.Client.Scenes
 {
     class SceneMap : Scene
     {
-        //--------------------------------------------------
-        // Render Layers Constants
-
-        public const int BACKGROUND_RENDER_LAYER = 10;
-        public const int TILED_MAP_RENDER_LAYER = 9;
-        public const int WATER_RENDER_LAYER = 6;
-        public const int MISC_RENDER_LAYER = 5;
-        public const int ENEMIES_RENDER_LAYER = 4;
-        public const int PLAYER_RENDER_LAYER = 3;
-        public const int PARTICLES_RENDER_LAYER = 2;
-        public const int HUD_BACK_RENDER_LAYER = 1;
-        public const int HUD_FILL_RENDER_LAYER = 0;
-
-        //--------------------------------------------------
-        // Tags
-
-        public const int PLAYER_TAG = 1;
-        public const int PROJECTILES_TAG = 1;
-
-        //--------------------------------------------------
-        // Layer Masks
-
-        public const int PLAYER_LAYER = 1;
-        public const int ENEMY_LAYER = 2;
-        public const int PROJECTILES_LAYER = 3;
-
         //--------------------------------------------------
         // Map
 
@@ -90,13 +65,13 @@ namespace MultiplayerShooter.Client.Scenes
             var collisionLayer = _tiledMap.properties["collisionLayer"];
             var defaultLayers = _tiledMap.properties["defaultLayers"].Split(',').Select(s => s.Trim()).ToArray();
 
-            _tiledMapComponent = tiledEntity.addComponent(new TiledMapComponent(_tiledMap, collisionLayer) { renderLayer = TILED_MAP_RENDER_LAYER });
+            _tiledMapComponent = tiledEntity.addComponent(new TiledMapComponent(_tiledMap, collisionLayer) { renderLayer = GlobalConstants.TILED_MAP_RENDER_LAYER });
             _tiledMapComponent.setLayersToRender(defaultLayers);
 
             if (_tiledMap.properties.ContainsKey("aboveWaterLayer"))
             {
                 var aboveWaterLayer = _tiledMap.properties["aboveWaterLayer"];
-                var tiledAboveWater = tiledEntity.addComponent(new TiledMapComponent(_tiledMap) { renderLayer = WATER_RENDER_LAYER });
+                var tiledAboveWater = tiledEntity.addComponent(new TiledMapComponent(_tiledMap) { renderLayer = GlobalConstants.WATER_RENDER_LAYER });
                 tiledAboveWater.setLayerToRender(aboveWaterLayer);
             }
         }
@@ -126,7 +101,7 @@ namespace MultiplayerShooter.Client.Scenes
             player.addComponent(new CharacterComponent());
             player.addComponent(new BattleComponent());
             var playerComponent = player.addComponent<PlayerComponent>();
-            playerComponent.sprite.renderLayer = PLAYER_RENDER_LAYER;
+            playerComponent.sprite.renderLayer = GlobalConstants.PLAYER_RENDER_LAYER;
 
             var box = createEntity("player");
             box.transform.position = playerSpawn.Value + 100 * Vector2.UnitX;
@@ -177,7 +152,7 @@ namespace MultiplayerShooter.Client.Scenes
                     .addComponent<NetworkComponent>();
 
                 var collider = entity.addComponent(new BoxCollider(-16f, -16f, 32f, 32f));
-                Flags.setFlagExclusive(ref collider.physicsLayer, ENEMY_LAYER);
+                Flags.setFlagExclusive(ref collider.physicsLayer, GlobalConstants.ENEMY_LAYER);
 
                 // disable entity
                 entity.setEnabled(false);
@@ -200,8 +175,18 @@ namespace MultiplayerShooter.Client.Scenes
                 .addComponent(new PrototypeSprite(32, 32) { color = Color.IndianRed })
                 .addComponent<NetworkComponent>();
 
+            // setup collider
             var collider = entity.addComponent(new BoxCollider(-16f, -16f, 32f, 32f));
-            Flags.setFlagExclusive(ref collider.physicsLayer, ENEMY_LAYER);
+            Flags.setFlagExclusive(ref collider.physicsLayer, GlobalConstants.ENEMY_LAYER);
+
+            // setup sprite
+            var texture = entity.scene.content.Load<Texture2D>(Content.Characters.placeholder);
+            var sprite = entity.addComponent(new AnimatedSprite(texture, "stand"));
+            sprite.CreateAnimation("stand", 0.25f);
+            sprite.AddFrames("stand", new List<Rectangle>
+            {
+                new Rectangle(0, 0, 32, 32),
+            });
 
             // disable entity
             entity.setEnabled(false);
@@ -232,6 +217,15 @@ namespace MultiplayerShooter.Client.Scenes
             var shot = createEntity("projectile");
             shot.addComponent(new ProjectileComponent(projectileData, 1, 500));
             shot.transform.position = new Vector2(projectileData.PositionX, projectileData.PositionY);
+
+            // sprite
+            var texture = content.Load<Texture2D>("arrow");
+            var sprite = shot.addComponent(new AnimatedSprite(texture, "default"));
+            sprite.CreateAnimation("default", 0.2f);
+            sprite.AddFrames("default", new List<Rectangle>
+            {
+                new Rectangle(0, 0, 12, 5)
+            });
         }
 
         private void OnConnected(PlayerData playerData)
@@ -244,7 +238,7 @@ namespace MultiplayerShooter.Client.Scenes
 
             // move the collider to the player layer
             var collider = player.getComponent<BoxCollider>();
-            Flags.setFlagExclusive(ref collider.physicsLayer, PLAYER_LAYER);
+            Flags.setFlagExclusive(ref collider.physicsLayer, GlobalConstants.PLAYER_LAYER);
 
             _player = player;
         }
@@ -266,13 +260,13 @@ namespace MultiplayerShooter.Client.Scenes
         public override void update()
         {
             base.update();
-            
+
             var networkManager = Core.getGlobalManager<NetworkManager>();
 
             // Update the position of the player on the network manager
             if (_player == null) return;
             networkManager.PlayerData.PositionX = (int) _player.position.X;
-            networkManager.PlayerData.PositionY = (int)_player.position.Y;
+            networkManager.PlayerData.PositionY = (int) _player.position.Y;
 
             // Update the position of the other players
             foreach (var player in networkManager.Players)

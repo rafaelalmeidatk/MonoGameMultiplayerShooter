@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Nez;
 
-namespace MultiplayerShooter.Client.Components.Colliders
+namespace MultiplayerShooter.Library.ECS.Components.Colliders
 {
     public class AttackCollider : BoxCollider
     {

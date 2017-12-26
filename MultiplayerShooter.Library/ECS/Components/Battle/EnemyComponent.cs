@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MultiplayerShooter.Client.Components.Battle;
-using MultiplayerShooter.Client.Components.Colliders;
-using MultiplayerShooter.Client.Components.Sprites;
-using MultiplayerShooter.Client.Scenes;
+using MultiplayerShooter.Library.ECS.Components.Colliders;
+using MultiplayerShooter.Library.ECS.Components.Sprites;
 using Nez;
 
-namespace MultiplayerShooter.Client.Components
+namespace MultiplayerShooter.Library.ECS.Components.Battle
 {
-    class CharacterComponent : Component, IBattleEntity, IUpdatable
+    public class EnemyComponent : Component, IBattleEntity, IUpdatable
     {
         //--------------------------------------------------
         // Sprite
@@ -47,28 +41,38 @@ namespace MultiplayerShooter.Client.Components
         // Battle Component
 
         protected BattleComponent _battleComponent;
-        public bool canTakeDamage => true;
 
         //--------------------------------------------------
-        // Velocity
+        // Area of Sight
 
-        public Vector2 Velocity { get; set; }
+        public AreaOfSightCollider areaOfSight;
+
+        //--------------------------------------------------
+        // Patrol
+
+        public float patrolTime;
+        public bool patrolStartRight;
+
+        //--------------------------------------------------
+        // Dangerous Stage
+
+        public int dangerousStage;
+
+        //--------------------------------------------------
+        // Can take damage
+
+        public virtual bool canTakeDamage => true;
 
         //----------------------//------------------------//
 
+        public EnemyComponent(bool patrolStartRight)
+        {
+            this.patrolStartRight = patrolStartRight;
+        }
 
         public override void initialize()
         {
-            base.initialize();
-
-            // Init sprite
-            var texture = entity.scene.content.Load<Texture2D>(Content.Characters.placeholder);
-            sprite = entity.addComponent(new AnimatedSprite(texture, "stand"));
-            sprite.CreateAnimation("stand", 0.25f);
-            sprite.AddFrames("stand", new List<Rectangle>
-            {
-                new Rectangle(0, 0, 32, 32),
-            });
+            dangerousStage = 1;
         }
 
         public override void onAddedToEntity()
@@ -78,6 +82,11 @@ namespace MultiplayerShooter.Client.Components
             _battleComponent = entity.getComponent<BattleComponent>();
             _battleComponent.setHp(40);
             _battleComponent.battleEntity = this;
+        }
+
+        public void increaseDangerousStage()
+        {
+            dangerousStage++;
         }
 
         public void forceMovement(Vector2 velocity)
@@ -104,11 +113,19 @@ namespace MultiplayerShooter.Client.Components
 
         public virtual void update()
         {
+            if (areaOfSight != null)
+            {
+                var offsetX = 0.0f;
+                if (sprite.spriteEffects == SpriteEffects.FlipHorizontally)
+                    offsetX = -2.0f * areaOfSight.X;
+                areaOfSight.ApplyOffset(offsetX, 0);
+            }
+
             // apply knockback before movement
             if (applyKnockback())
                 return;
 
-            var velocity = _forceMovement ? _forceMovementVelocity.X : Velocity.X;
+            var velocity = _forceMovement ? _forceMovementVelocity.X : 0.0f;
             if (canMove() && (velocity > 0 || velocity < 0))
             {
                 var po = _platformerObject;
@@ -155,6 +172,18 @@ namespace MultiplayerShooter.Client.Components
                 appliedKb = true;
             }
             return appliedKb;
+        }
+
+        public bool canSeeThePlayer()
+        {
+            if (!playerCollider.entity.enabled) return false;
+            CollisionResult collisionResult;
+            return areaOfSight.collidesWith(playerCollider, out collisionResult);
+        }
+
+        public float distanceToPlayer()
+        {
+            return playerCollider.entity.position.X - entity.position.X;
         }
 
         private bool canMove()

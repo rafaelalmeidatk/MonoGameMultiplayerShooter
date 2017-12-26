@@ -1,6 +1,6 @@
 ﻿using Nez;
 
-namespace MultiplayerShooter.Client.Components
+namespace MultiplayerShooter.Library.ECS.Components
 {
     public class NetworkComponent : Component
     {

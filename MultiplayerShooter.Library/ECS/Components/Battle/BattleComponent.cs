@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using MultiplayerShooter.Client.Components.Sprites;
+using MultiplayerShooter.Library.ECS.Components.Sprites;
 using Nez;
 using Nez.Sprites;
 
-namespace MultiplayerShooter.Client.Components.Battle
+namespace MultiplayerShooter.Library.ECS.Components.Battle
 {
     public interface IBattleEntity
     {

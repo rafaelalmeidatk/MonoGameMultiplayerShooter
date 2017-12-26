@@ -33,8 +33,8 @@ namespace MultiplayerShooter.Client
 
         protected override void LoadContent()
         {
-            bigBitmapFont = content.Load<BitmapFont>(Nez.Content.Fonts.titleFont);
-            smallBitmapFont = content.Load<BitmapFont>(Nez.Content.Fonts.smallFont);
+            bigBitmapFont = content.Load<BitmapFont>(Client.Content.Fonts.titleFont);
+            smallBitmapFont = content.Load<BitmapFont>(Client.Content.Fonts.smallFont);
         }
 
         protected override void Initialize()

@@ -1,14 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MultiplayerShooter.Client.Components.Battle;
-using MultiplayerShooter.Client.Components.Sprites;
 using MultiplayerShooter.Client.FSM;
 using MultiplayerShooter.Client.Managers;
 using MultiplayerShooter.Client.Scenes;
+using MultiplayerShooter.Library.ECS.Components;
+using MultiplayerShooter.Library.ECS.Components.Battle;
+using MultiplayerShooter.Library.ECS.Components.Sprites;
 using MultiplayerShooter.Library.Projectiles;
 using Nez;
 using Nez.Tiled;
 using System.Collections.Generic;
+using MultiplayerShooter.Library;
 
 namespace MultiplayerShooter.Client.Components.Player
 {
@@ -100,7 +102,7 @@ namespace MultiplayerShooter.Client.Components.Player
             _platformerObject = entity.getComponent<PlatformerObject>();
             _characterComponent = entity.getComponent<CharacterComponent>();
 
-            entity.setTag(SceneMap.PLAYER_TAG);
+            entity.setTag(GlobalConstants.PLAYER_TAG);
         }
 
         public void destroyEntity()
@@ -131,7 +133,6 @@ namespace MultiplayerShooter.Client.Components.Player
             var axis = Core.getGlobalManager<InputManager>().MovementAxis.value;
             var velocity = _forceMovement ? _forceMovementVelocity.X : axis;
             _characterComponent.Velocity = velocity * Vector2.UnitX;
-
         }
 
         public void SetAnimation(Animations animation)
@@ -173,6 +174,15 @@ namespace MultiplayerShooter.Client.Components.Player
             var direction = sprite.spriteEffects == SpriteEffects.FlipHorizontally ? -1 : 1;
             shot.addComponent(new ProjectileComponent(projectileData, direction, 500));
             shot.transform.position = position;
+
+            // sprite
+            var texture = entity.scene.content.Load<Texture2D>("arrow");
+            var projectileSprite = entity.addComponent(new AnimatedSprite(texture, "default"));
+            projectileSprite.CreateAnimation("default", 0.2f);
+            projectileSprite.AddFrames("default", new List<Rectangle>
+            {
+                new Rectangle(0, 0, 12, 5)
+            });
 
             networkManager.CreateProjectile(projectileData);
         }

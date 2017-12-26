@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MultiplayerShooter.Client.Components.Sprites;
-using MultiplayerShooter.Client.Scenes;
+using MultiplayerShooter.Library.ECS.Components.Sprites;
 using MultiplayerShooter.Library.Projectiles;
 using Nez;
 
-namespace MultiplayerShooter.Client.Components.Battle
+namespace MultiplayerShooter.Library.ECS.Components.Battle
 {
     public class ProjectileComponent : Component
     {
@@ -36,28 +35,25 @@ namespace MultiplayerShooter.Client.Components.Battle
 
         public override void initialize()
         {
-            var texture = entity.scene.content.Load<Texture2D>("arrow");
-            sprite = entity.addComponent(new AnimatedSprite(texture, "default"));
-            sprite.CreateAnimation("default", 0.2f);
-            sprite.AddFrames("default", new List<Rectangle>
-            {
-                new Rectangle(0, 0, 12, 5)
-            });
+            /*
+            */
 
             var collider = entity.addComponent(new BoxCollider(-6, -2, 12, 5));
-            Flags.setFlagExclusive(ref collider.physicsLayer, SceneMap.PROJECTILES_LAYER);
+            Flags.setFlagExclusive(ref collider.physicsLayer, GlobalConstants.PROJECTILES_LAYER);
 
             _initialPosition = new Vector2(Data.PositionX, Data.PositionY);
-
-            var rotation = (float)Math.Atan2(Data.VelocityY, Data.VelocityX);
-
-            sprite.entity.setRotation(rotation);
-            sprite.renderLayer = SceneMap.MISC_RENDER_LAYER;
         }
 
         public override void onAddedToEntity()
         {
-            entity.setTag(SceneMap.PROJECTILES_TAG);
+            sprite = entity.getComponent<AnimatedSprite>();
+            if (sprite != null)
+            {
+                var rotation = (float)Math.Atan2(Data.VelocityY, Data.VelocityX);
+                sprite.entity.setRotation(rotation);
+                sprite.renderLayer = GlobalConstants.MISC_RENDER_LAYER;
+            }
+            entity.setTag(GlobalConstants.PROJECTILES_TAG);
         }
 
         public void update()

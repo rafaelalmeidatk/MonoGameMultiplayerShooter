@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using MultiplayerShooter.Client.Components.Battle;
-using MultiplayerShooter.Client.Components.Sprites;
+using MultiplayerShooter.Library.ECS.Components.Battle;
+using MultiplayerShooter.Library.ECS.Components.Sprites;
 using Nez;
 
 namespace MultiplayerShooter.Client.Systems

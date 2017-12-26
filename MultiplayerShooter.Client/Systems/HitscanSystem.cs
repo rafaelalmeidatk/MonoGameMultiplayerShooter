@@ -1,6 +1,7 @@
 ﻿using System;
-using MultiplayerShooter.Client.Components.Battle;
 using MultiplayerShooter.Client.Scenes;
+using MultiplayerShooter.Library;
+using MultiplayerShooter.Library.ECS.Components.Battle;
 using Nez;
 
 namespace MultiplayerShooter.Client.Systems
@@ -13,7 +14,7 @@ namespace MultiplayerShooter.Client.Systems
         {
             var hitscan = entity.getComponent<HitscanComponent>();
             
-            var raycastHit = Physics.linecast(hitscan.Start, hitscan.End, 1 << SceneMap.ENEMY_LAYER);
+            var raycastHit = Physics.linecast(hitscan.Start, hitscan.End, 1 << GlobalConstants.ENEMY_LAYER);
             if (raycastHit.collider != null)
             {
                 Console.WriteLine("hit!");
