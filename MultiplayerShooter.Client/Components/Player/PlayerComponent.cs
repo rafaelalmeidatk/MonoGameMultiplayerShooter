@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MultiplayerShooter.Client.Components.Battle;
 using MultiplayerShooter.Client.Components.Sprites;
 using MultiplayerShooter.Client.FSM;
 using MultiplayerShooter.Client.Managers;
 using MultiplayerShooter.Client.Scenes;
+using MultiplayerShooter.Library.Projectiles;
 using Nez;
 using Nez.Tiled;
+using System.Collections.Generic;
 
 namespace MultiplayerShooter.Client.Components.Player
 {
@@ -150,6 +151,30 @@ namespace MultiplayerShooter.Client.Components.Player
         public Entity createEntityOnMap()
         {
             return entity.scene.createEntity();
+        }
+
+        public void shoot()
+        {
+            var position = entity.getComponent<BoxCollider>().absolutePosition;
+            var networkManager = Core.getGlobalManager<NetworkManager>();
+
+            var projectileData = new ProjectileData
+            {
+                Id = 0,
+                FromPlayerId = networkManager.PlayerData.Id,
+                PositionX = (int)position.X,
+                PositionY = (int)position.Y,
+                Type = ProjectileType.Linear,
+                VelocityX = 5,
+                VelocityY = 0
+            };
+
+            var shot = entity.scene.createEntity("projectile");
+            var direction = sprite.spriteEffects == SpriteEffects.FlipHorizontally ? -1 : 1;
+            shot.addComponent(new ProjectileComponent(projectileData, direction, 500));
+            shot.transform.position = position;
+
+            networkManager.CreateProjectile(projectileData);
         }
 
         public void Jump()

@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MultiplayerShooter.Client.Components.Battle;
 using MultiplayerShooter.Client.Components.Colliders;
 using MultiplayerShooter.Client.Components.Sprites;
+using MultiplayerShooter.Client.Scenes;
 using Nez;
 
 namespace MultiplayerShooter.Client.Components

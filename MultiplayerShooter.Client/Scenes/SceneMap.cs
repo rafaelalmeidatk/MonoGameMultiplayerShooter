@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Lidgren.Network;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MultiplayerShooter.Client.Components;
 using MultiplayerShooter.Client.Components.Battle;
 using MultiplayerShooter.Client.Components.Player;
@@ -11,6 +12,7 @@ using MultiplayerShooter.Client.Components.Windows;
 using MultiplayerShooter.Client.Managers;
 using MultiplayerShooter.Client.Systems;
 using MultiplayerShooter.Library;
+using MultiplayerShooter.Library.Projectiles;
 using Nez;
 using Nez.Tiled;
 
@@ -35,12 +37,14 @@ namespace MultiplayerShooter.Client.Scenes
         // Tags
 
         public const int PLAYER_TAG = 1;
+        public const int PROJECTILES_TAG = 1;
 
         //--------------------------------------------------
         // Layer Masks
 
         public const int PLAYER_LAYER = 1;
         public const int ENEMY_LAYER = 2;
+        public const int PROJECTILES_LAYER = 3;
 
         //--------------------------------------------------
         // Map
@@ -135,6 +139,7 @@ namespace MultiplayerShooter.Client.Scenes
         {
             addEntityProcessor(new BattleSystem());
             addEntityProcessor(new HitscanSystem());
+            addEntityProcessor(new ProjectilesSystem(_player));
             setupCamera(_player);
         }
 
@@ -216,20 +221,30 @@ namespace MultiplayerShooter.Client.Scenes
             // assign events
             networkManager.OnPlayerAdded = OnPlayerAdded;
             networkManager.OnConnected = OnConnected;
+            networkManager.OnCreateProjectile = OnCreateProjectile;
 
             // start the server
             networkManager.Start();
         }
 
+        private void OnCreateProjectile(ProjectileData projectileData)
+        {
+            var shot = createEntity("projectile");
+            shot.addComponent(new ProjectileComponent(projectileData, 1, 500));
+            shot.transform.position = new Vector2(projectileData.PositionX, projectileData.PositionY);
+        }
+
         private void OnConnected(PlayerData playerData)
         {
-            Console.WriteLine($"on connected with id: {playerData.Id}");
-            // grab the first entity and set is as our player
             var player = createCharacterEntity();
             player.getComponent<NetworkComponent>().Id = playerData.Id; // assign our id
             player.addComponent<PlayerComponent>(); // set as player
             player.setEnabled(true);
             player.setPosition(playerData.PositionX, playerData.PositionY);
+
+            // move the collider to the player layer
+            var collider = player.getComponent<BoxCollider>();
+            Flags.setFlagExclusive(ref collider.physicsLayer, PLAYER_LAYER);
 
             _player = player;
         }
@@ -251,7 +266,7 @@ namespace MultiplayerShooter.Client.Scenes
         public override void update()
         {
             base.update();
-
+            
             var networkManager = Core.getGlobalManager<NetworkManager>();
 
             // Update the position of the player on the network manager

@@ -1,11 +1,10 @@
-﻿using System;
+﻿using MultiplayerShooter.Library.Projectiles;
+using MultiplayerShooter.Server.Commands;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using MultiplayerShooter.Library;
-using MultiplayerShooter.Server.Commands;
 
 namespace MultiplayerShooter.Server
 {
@@ -13,6 +12,9 @@ namespace MultiplayerShooter.Server
     {
         // Players
         public List<PlayerAndConnection> Players { get; set; }
+
+        // Projectiles
+        public List<ProjectileData> Projectiles { get; set; }
 
         // Task
         private CancellationTokenSource _cancellationTokenSource;
@@ -24,6 +26,7 @@ namespace MultiplayerShooter.Server
         public GameMap(Server server)
         {
             Players = new List<PlayerAndConnection>();
+            Projectiles = new List<ProjectileData>();
 
             _cancellationTokenSource = new CancellationTokenSource();
             _task = new Task(Update, _cancellationTokenSource.Token);
@@ -61,6 +64,25 @@ namespace MultiplayerShooter.Server
         public void AddPlayer(PlayerAndConnection playerAndConnection)
         {
             Players.Add(playerAndConnection);
+        }
+
+        public ProjectileData AddProjectile(ProjectileData projectile)
+        {
+            projectile.Id = GenerateProjectileId();
+            Projectiles.Add(projectile);
+            return projectile;
+        }
+
+        public byte GeneratePlayerId()
+        {
+            Debug.Assert(Players.Count + 1 <= 255, "Players count cannot be lower than 255");
+            var count = Players.Count + 1;
+            return BitConverter.GetBytes(count)[0];
+        }
+
+        public int GenerateProjectileId()
+        {
+            return Projectiles.Count + 1;
         }
     }
 }

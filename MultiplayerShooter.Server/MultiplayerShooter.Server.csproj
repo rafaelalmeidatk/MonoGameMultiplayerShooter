@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\AllPlayersCommand.cs" />
+    <Compile Include="Commands\CreateProjectileCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\LoginCommand.cs" />
     <Compile Include="Commands\PlayerPositionCommand.cs" />

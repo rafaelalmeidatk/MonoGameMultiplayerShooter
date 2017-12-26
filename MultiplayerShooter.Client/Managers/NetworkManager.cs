@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Lidgren.Network;
 using MultiplayerShooter.Library;
 using MultiplayerShooter.Library.Networking.PacketIO;
+using MultiplayerShooter.Library.Projectiles;
 using Nez;
 using Random = System.Random;
 
@@ -24,7 +25,6 @@ namespace MultiplayerShooter.Client.Managers
         // Players
 
         public Dictionary<long, PlayerData> Players { get; }
-        private List<long> _registeredIds;
         
         //--------------------------------------------------
         // Player
@@ -36,6 +36,7 @@ namespace MultiplayerShooter.Client.Managers
 
         public Action<PlayerData> OnConnected { get; set; }
         public Action<PlayerData> OnPlayerAdded { get; set; }
+        public Action<ProjectileData> OnCreateProjectile { get; set; }
 
         //--------------------------------------------------
         // Is Active
@@ -46,13 +47,13 @@ namespace MultiplayerShooter.Client.Managers
 
         public NetworkManager()
         {
-            _registeredIds = new List<long>();
             Players = new Dictionary<long, PlayerData>();
         }
 
         public bool Start()
         {
             var config = new NetPeerConfiguration(GlobalConstants.APPNAME);
+            //config.SimulatedRandomLatency = 0.2f;
             _client = new NetClient(config);
             _client.Start();
 
@@ -87,6 +88,9 @@ namespace MultiplayerShooter.Client.Managers
                             var data = new LoginPacketIO().ReadResponse(hmsg);
 
                             PlayerData = data.Player;
+
+                            Console.WriteLine($"Our id is '{PlayerData.Id}'");
+
                             foreach (var player in data.OtherPlayers)
                             {
                                 Players[player.Id] =
@@ -129,7 +133,7 @@ namespace MultiplayerShooter.Client.Managers
                 var om = _client.CreateMessage();
                 new PlayerPositionPacketIO().WriteResponse(om,
                     new PlayerPositionPacketIO.PacketDataResponse {Player = PlayerData});
-                _client.SendMessage(om, NetDeliveryMethod.Unreliable);
+                _client.SendMessage(om, NetDeliveryMethod.UnreliableSequenced);
                 _client.FlushSendQueue();
             }
 
@@ -171,25 +175,23 @@ namespace MultiplayerShooter.Client.Managers
                         Players[player.Id] = player;
                     }
                     break;
-                    /*
-                    case PacketType.Connection:
-                        Console.WriteLine("connection");
-                        who = msg.ReadInt64();
-                        OnConnected?.Invoke(who);
-                        break;
-                    case PacketType.Login:
-                        Console.WriteLine("login");
-                        who = msg.ReadInt64();
-                        OnPlayerAdded?.Invoke(who);
-                        break;
-                    case PacketType.Position:
-                        who = msg.ReadInt64();
-                        var x = msg.ReadInt32();
-                        var y = msg.ReadInt32();
-                        Players[who] = new PlayerData { PositionX = x, PositionY = y };
-                        break;
-                    */
+                case PacketType.CreateProjectile:
+                    Console.WriteLine("projectile response");
+                    var respo = new CreateProjectilePacketIO().ReadResponse(im);
+                    Console.WriteLine($"with id {respo.ProjectileData.Id}");
+                    OnCreateProjectile?.Invoke(respo.ProjectileData);
+                    break;
             }
+        }
+
+        public void CreateProjectile(ProjectileData projectileData)
+        {
+            var om = _client.CreateMessage();
+            new CreateProjectilePacketIO().WriteRequest(om, new CreateProjectilePacketIO.PacketDataRequest
+            {
+                ProjectileData = projectileData
+            });
+            _client.SendMessage(om, NetDeliveryMethod.ReliableUnordered);
         }
 
         private string GetRandomUsername()

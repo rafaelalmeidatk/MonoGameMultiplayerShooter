@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="GlobalConstants.cs" />
     <Compile Include="Networking\PacketIO\AllPlayersPacketIO.cs" />
+    <Compile Include="Networking\PacketIO\CreateProjectilePacketIO.cs" />
     <Compile Include="Networking\PacketIO\IPacketIO.cs" />
     <Compile Include="Networking\PacketIO\LoginPacketIO.cs" />
     <Compile Include="Networking\PacketIO\NewPlayerPacketIO.cs" />
@@ -54,6 +55,8 @@
     <Compile Include="Networking\PacketIO\UpdatePlayerPositionPacketIO.cs" />
     <Compile Include="PacketType.cs" />
     <Compile Include="PlayerData.cs" />
+    <Compile Include="Projectiles\ProjectileData.cs" />
+    <Compile Include="Projectiles\ProjectileType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

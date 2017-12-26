@@ -16,6 +16,8 @@ namespace MultiplayerShooter.Server
                     return new PlayerPositionCommand();
                 case PacketType.UpdatePlayerPosition:
                     return new UpdatePlayerPositionCommand();
+                case PacketType.CreateProjectile:
+                    return new CreateProjectileCommand();
                 default:
                     throw new ArgumentOutOfRangeException(nameof(packetType));
             }

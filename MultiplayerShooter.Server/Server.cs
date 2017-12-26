@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using MultiplayerShooter.Library;
+using MultiplayerShooter.Library.Networking.PacketIO;
+using MultiplayerShooter.Library.Projectiles;
 using MultiplayerShooter.Server.Commands;
+using System;
+using System.Threading;
 
 namespace MultiplayerShooter.Server
 {
@@ -141,6 +139,20 @@ namespace MultiplayerShooter.Server
                 om.WriteAllProperties(newPlayer.Player);
 
                 NetServer.SendMessage(om, connection, NetDeliveryMethod.ReliableOrdered);
+            }
+        }
+
+        public void SendNewProjectileBroadcast(ProjectileData projectileData)
+        {
+            foreach (var playerAndConnection in _gameMap.Players)
+            {
+                var connection = playerAndConnection.Connection;
+                var om = NetServer.CreateMessage();
+                new CreateProjectilePacketIO().WriteResponse(om, new CreateProjectilePacketIO.PacketDataResponse
+                {
+                    ProjectileData = projectileData
+                });
+                NetServer.SendMessage(om, connection, NetDeliveryMethod.ReliableUnordered);
             }
         }
 

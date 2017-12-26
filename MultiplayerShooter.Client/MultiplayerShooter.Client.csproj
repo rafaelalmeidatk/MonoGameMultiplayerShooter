@@ -84,6 +84,7 @@
     <Compile Include="Systems\CameraSystem.cs" />
     <Compile Include="Systems\CollisorsSystem.cs" />
     <Compile Include="Systems\HitscanSystem.cs" />
+    <Compile Include="Systems\ProjectilesSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Lidgren.Network, Version=3.7.0.1156, Culture=neutral, processorArchitecture=MSIL">

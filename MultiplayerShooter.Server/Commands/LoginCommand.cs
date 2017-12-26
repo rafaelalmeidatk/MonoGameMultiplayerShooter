@@ -22,7 +22,7 @@ namespace MultiplayerShooter.Server.Commands
                 
                 // Create the player and add it to the map
                 var packetData = new LoginPacketIO().ReadRequest(im);
-                playerAndConnection = CreatePlayer(im, packetData.Username);
+                playerAndConnection = CreatePlayer(im, packetData.Username, gameMap);
 
                 // Create the hail message
                 // it contains the player id and all the players already connected
@@ -57,12 +57,12 @@ namespace MultiplayerShooter.Server.Commands
             return hmsg;
         }
 
-        private PlayerAndConnection CreatePlayer(NetIncomingMessage im, string username)
+        private PlayerAndConnection CreatePlayer(NetIncomingMessage im, string username, GameMap gameMap)
         {
             var rand = new Random();
             var player = new PlayerData
             {
-                Id = im.SenderConnection.RemoteUniqueIdentifier,
+                Id = gameMap.GeneratePlayerId(),
                 Username = username,
                 PositionX = rand.Next(400),
                 PositionY = 0

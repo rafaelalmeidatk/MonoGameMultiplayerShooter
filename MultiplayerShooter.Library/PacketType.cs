@@ -2,10 +2,17 @@
 {
     public enum PacketType
     {
+        /* Player Login*/
+
         Login,
+
+        /* Players */
         NewPlayer,
         AllPlayers,
         PlayerPosition,
-        UpdatePlayerPosition
+        UpdatePlayerPosition,
+
+        /* Projectile */
+        CreateProjectile
     }
 }

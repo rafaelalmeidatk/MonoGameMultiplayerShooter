@@ -125,10 +125,13 @@ namespace MultiplayerShooter.Client.Components.Player
 
         private void shot()
         {
+            entity.shoot();
+            /*
             var start = entity.entity.position;
             var end = start + 200 * Vector2.UnitX;
             entity.createEntityOnMap()
                 .addComponent(new HitscanComponent(start, end, false));
+                */
         }
     }
 }
