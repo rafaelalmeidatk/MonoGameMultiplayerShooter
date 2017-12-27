@@ -1,4 +1,4 @@
-﻿namespace MultiplayerShooter.Library
+﻿namespace MultiplayerShooter.Library.Networking
 {
     public enum PacketType
     {

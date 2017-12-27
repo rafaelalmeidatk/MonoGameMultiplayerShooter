@@ -28,16 +28,13 @@ namespace MultiplayerShooter.Library.ECS.Components.Battle
 
         //----------------------//------------------------//
 
-        public ProjectileComponent(ProjectileData data, int direction, float speed, float rotation = 0.0f)
+        public ProjectileComponent(ProjectileData data)
         {
             Data = data;
         }
 
         public override void initialize()
         {
-            /*
-            */
-
             var collider = entity.addComponent(new BoxCollider(-6, -2, 12, 5));
             Flags.setFlagExclusive(ref collider.physicsLayer, GlobalConstants.PROJECTILES_LAYER);
 
@@ -50,7 +47,7 @@ namespace MultiplayerShooter.Library.ECS.Components.Battle
             if (sprite != null)
             {
                 var rotation = (float)Math.Atan2(Data.VelocityY, Data.VelocityX);
-                sprite.entity.setRotation(rotation);
+                entity.setRotation(rotation);
                 sprite.renderLayer = GlobalConstants.MISC_RENDER_LAYER;
             }
             entity.setTag(GlobalConstants.PROJECTILES_TAG);
@@ -60,8 +57,8 @@ namespace MultiplayerShooter.Library.ECS.Components.Battle
         {
             if (Data.Type == ProjectileType.Linear)
             {
-                var velx = Mathf.cos(entity.transform.rotation) * Data.VelocityX * Time.timeScale;
-                var vely = Mathf.sin(entity.transform.rotation) * Data.VelocityY * Time.timeScale;
+                var velx = Data.VelocityX * Time.timeScale;
+                var vely = Data.VelocityY * Time.timeScale;
                 _currentPosition += new Vector2(velx, vely);
             }
             updateEntity();

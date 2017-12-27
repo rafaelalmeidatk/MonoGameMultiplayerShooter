@@ -69,29 +69,11 @@ namespace MultiplayerShooter.Client.Components.Player
 
         public override void initialize()
         {
-            var texture = entity.scene.content.Load<Texture2D>(Content.Characters.player);
-
             _animationMap = new Dictionary<Animations, string>
             {
                 {Animations.Stand, "stand"},
                 {Animations.Shot, "shot"},
             };
-
-            var am = _animationMap;
-
-            sprite = entity.addComponent(new AnimatedSprite(texture, am[Animations.Stand]));
-            sprite.CreateAnimation(am[Animations.Stand], 0.1f);
-            sprite.AddFrames(am[Animations.Stand], new List<Rectangle>()
-            {
-                new Rectangle(0, 0, 32, 32),
-            });
-
-            sprite.CreateAnimation(am[Animations.Shot], 0.1f);
-            sprite.AddFrames(am[Animations.Shot], new List<Rectangle>()
-            {
-                new Rectangle(32, 0, 32, 32),
-                new Rectangle(32, 0, 32, 32),
-            });
 
             // init fsm
             _fsm = new FiniteStateMachine<PlayerState, PlayerComponent>(this, new StandState());
@@ -101,6 +83,8 @@ namespace MultiplayerShooter.Client.Components.Player
         {
             _platformerObject = entity.getComponent<PlatformerObject>();
             _characterComponent = entity.getComponent<CharacterComponent>();
+
+            sprite = entity.getComponent<AnimatedSprite>();
 
             entity.setTag(GlobalConstants.PLAYER_TAG);
         }
@@ -128,7 +112,7 @@ namespace MultiplayerShooter.Client.Components.Player
         {
             // Update FSM
             _fsm.update();
-
+            
             // Update input
             var axis = Core.getGlobalManager<InputManager>().MovementAxis.value;
             var velocity = _forceMovement ? _forceMovementVelocity.X : axis;
@@ -137,6 +121,7 @@ namespace MultiplayerShooter.Client.Components.Player
 
         public void SetAnimation(Animations animation)
         {
+            if (sprite == null) return;
             var animationStr = _animationMap[animation];
             if (sprite.CurrentAnimation != animationStr)
             {
@@ -166,13 +151,12 @@ namespace MultiplayerShooter.Client.Components.Player
                 PositionX = (int)position.X,
                 PositionY = (int)position.Y,
                 Type = ProjectileType.Linear,
-                VelocityX = 5,
+                VelocityX = 5 * (sprite.spriteEffects == SpriteEffects.FlipHorizontally ? -1 : 1),
                 VelocityY = 0
             };
 
             var shot = entity.scene.createEntity("projectile");
-            var direction = sprite.spriteEffects == SpriteEffects.FlipHorizontally ? -1 : 1;
-            shot.addComponent(new ProjectileComponent(projectileData, direction, 500));
+            shot.addComponent(new ProjectileComponent(projectileData));
             shot.transform.position = position;
 
             // sprite

@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MultiplayerShooter.Client.Components;
 using MultiplayerShooter.Client.Components.Player;
-using MultiplayerShooter.Client.Components.Windows;
 using MultiplayerShooter.Client.Managers;
 using MultiplayerShooter.Client.Systems;
 using MultiplayerShooter.Library;
@@ -39,8 +38,6 @@ namespace MultiplayerShooter.Client.Scenes
         {
             addRenderer(new DefaultRenderer());
             setupMap();
-            //setupPlayer();
-            //setupEnemies
 
             _playersEntities = new List<Entity>();
             connectToServer();
@@ -49,8 +46,6 @@ namespace MultiplayerShooter.Client.Scenes
         public override void onStart()
         {
             base.onStart();
-
-            setupPlayers();
             
             setupEntityProcessors();
         }
@@ -76,51 +71,10 @@ namespace MultiplayerShooter.Client.Scenes
             }
         }
 
-        private void setupPlayer()
-        {
-            var sysManager = Core.getGlobalManager<SystemManager>();
-
-            var collisionLayer = _tiledMap.properties["collisionLayer"];
-            Vector2? playerSpawn;
-
-            if (sysManager.SpawnPosition.HasValue)
-            {
-                playerSpawn = sysManager.SpawnPosition;
-            }
-            else
-            {
-                playerSpawn = _tiledMap.getObjectGroup("objects").objectWithName("playerSpawn").position;
-            }
-
-            var player = createEntity("player");
-            player.transform.position = playerSpawn.Value;
-            player.addComponent(new TiledMapMover(_tiledMap.getLayer<TiledTileLayer>(collisionLayer)));
-            player.addComponent(new BoxCollider(-16f, -16f, 32f, 32f));
-            player.addComponent(new PlatformerObject(_tiledMap));
-            player.addComponent<TextWindowComponent>();
-            player.addComponent(new CharacterComponent());
-            player.addComponent(new BattleComponent());
-            var playerComponent = player.addComponent<PlayerComponent>();
-            playerComponent.sprite.renderLayer = GlobalConstants.PLAYER_RENDER_LAYER;
-
-            var box = createEntity("player");
-            box.transform.position = playerSpawn.Value + 100 * Vector2.UnitX;
-            box.addComponent(new TiledMapMover(_tiledMap.getLayer<TiledTileLayer>(collisionLayer)));
-            box.addComponent(new BoxCollider(-16f, -16f, 32f, 32f));
-            box.addComponent(new PlatformerObject(_tiledMap));
-        }
-
         private void setupEntityProcessors()
         {
-            addEntityProcessor(new BattleSystem());
-            addEntityProcessor(new HitscanSystem());
             addEntityProcessor(new ProjectilesSystem(_player));
-            setupCamera(_player);
-        }
-
-        private void setupCamera(Entity target)
-        {
-            addEntityProcessor(new CameraSystem(target)
+            addEntityProcessor(new CameraSystem(_player)
             {
                 mapLockEnabled = true,
                 mapSize = new Vector2(_tiledMap.widthInPixels, _tiledMap.heightInPixels),
@@ -133,35 +87,6 @@ namespace MultiplayerShooter.Client.Scenes
 
         #region setupNetwork
 
-        private void setupPlayers()
-        {
-            return;
-            var collisionLayer = _tiledMap.properties["collisionLayer"];
-
-            //_playersEntities = new Entity[GlobalConstants.MAX_PLAYERS];
-            for (var i = 0; i < GlobalConstants.MAX_PLAYERS; i++)
-            {
-                var entity = createEntity($"player-{i}");
-                entity
-                    /*
-                    .addComponent(new TiledMapMover(_tiledMap.getLayer<TiledTileLayer>(collisionLayer)))
-                    .addComponent(new PlatformerObject(_tiledMap))
-                    .addComponent<BattleComponent>()
-                    .addComponent<CharacterComponent>()*/
-                    .addComponent(new PrototypeSprite(32, 32){color = Color.IndianRed})
-                    .addComponent<NetworkComponent>();
-
-                var collider = entity.addComponent(new BoxCollider(-16f, -16f, 32f, 32f));
-                Flags.setFlagExclusive(ref collider.physicsLayer, GlobalConstants.ENEMY_LAYER);
-
-                // disable entity
-                entity.setEnabled(false);
-                entity.setPosition(Nez.Random.nextInt(500), Nez.Random.nextInt(50));
-
-                _playersEntities[i] = entity;
-            }
-        }
-
         private Entity createCharacterEntity()
         {
             var collisionLayer = _tiledMap.properties["collisionLayer"];
@@ -172,7 +97,8 @@ namespace MultiplayerShooter.Client.Scenes
                 .addComponent(new PlatformerObject(_tiledMap))
                 .addComponent<BattleComponent>()
                 .addComponent<CharacterComponent>()
-                .addComponent(new PrototypeSprite(32, 32) { color = Color.IndianRed })
+                .addComponent<CharacterLabelComponent>()
+                .addComponent(new PrototypeSprite(32, 32) {color = Color.IndianRed})
                 .addComponent<NetworkComponent>();
 
             // setup collider
@@ -180,12 +106,18 @@ namespace MultiplayerShooter.Client.Scenes
             Flags.setFlagExclusive(ref collider.physicsLayer, GlobalConstants.ENEMY_LAYER);
 
             // setup sprite
-            var texture = entity.scene.content.Load<Texture2D>(Content.Characters.placeholder);
+            var texture = content.Load<Texture2D>(Content.Characters.placeholder);
             var sprite = entity.addComponent(new AnimatedSprite(texture, "stand"));
             sprite.CreateAnimation("stand", 0.25f);
             sprite.AddFrames("stand", new List<Rectangle>
             {
                 new Rectangle(0, 0, 32, 32),
+            });
+            sprite.CreateAnimation("shot", 0.1f);
+            sprite.AddFrames("shot", new List<Rectangle>
+            {
+                new Rectangle(32, 0, 32, 32),
+                new Rectangle(32, 0, 32, 32),
             });
 
             // disable entity
@@ -215,7 +147,7 @@ namespace MultiplayerShooter.Client.Scenes
         private void OnCreateProjectile(ProjectileData projectileData)
         {
             var shot = createEntity("projectile");
-            shot.addComponent(new ProjectileComponent(projectileData, 1, 500));
+            shot.addComponent(new ProjectileComponent(projectileData));
             shot.transform.position = new Vector2(projectileData.PositionX, projectileData.PositionY);
 
             // sprite
@@ -232,6 +164,7 @@ namespace MultiplayerShooter.Client.Scenes
         {
             var player = createCharacterEntity();
             player.getComponent<NetworkComponent>().Id = playerData.Id; // assign our id
+            player.getComponent<CharacterLabelComponent>().Label = playerData.Username;
             player.addComponent<PlayerComponent>(); // set as player
             player.setEnabled(true);
             player.setPosition(playerData.PositionX, playerData.PositionY);
@@ -251,6 +184,7 @@ namespace MultiplayerShooter.Client.Scenes
             Console.WriteLine($"player added with id: {playerData.Id}");
 
             var entity = createCharacterEntity();
+            entity.getComponent<CharacterLabelComponent>().Label = playerData.Username;
             var networkComponent = entity.getComponent<NetworkComponent>();
             networkComponent.Id = playerData.Id;
             entity.setPosition(playerData.PositionX, playerData.PositionY);

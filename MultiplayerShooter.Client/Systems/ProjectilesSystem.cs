@@ -33,7 +33,7 @@ namespace MultiplayerShooter.Client.Systems
             var linecast = Physics.linecast(lastPosition, newPosition, flag);
             if (linecast.collider != null)
             {
-                if (_playerBattler.onHit(linecast.normal * -1))
+                if (linecast.collider.entity.getComponent<BattleComponent>().onHit(linecast.normal * -1))
                 {
                     entity.destroy();
                 }
@@ -46,7 +46,6 @@ namespace MultiplayerShooter.Client.Systems
             // shots vs map
             if (collider.collidesWithAnyOfType<MapBoxCollider>(out collisionResult))
             {
-                Console.WriteLine("hey");
                 entity.destroy();
             }
 

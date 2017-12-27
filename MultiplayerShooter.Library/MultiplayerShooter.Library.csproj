@@ -50,11 +50,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ECS\Components\Battle\BattleComponent.cs" />
-    <Compile Include="ECS\Components\Battle\Enemies\EnemyPlaceholderComponent.cs" />
-    <Compile Include="ECS\Components\Battle\EnemyComponent.cs" />
-    <Compile Include="ECS\Components\Battle\HitscanComponent.cs" />
     <Compile Include="ECS\Components\Battle\ProjectileComponent.cs" />
     <Compile Include="ECS\Components\CharacterComponent.cs" />
+    <Compile Include="ECS\Components\CharacterLabelComponent.cs" />
     <Compile Include="ECS\Components\Colliders\AreaOfSightCollider.cs" />
     <Compile Include="ECS\Components\Colliders\AttackCollider.cs" />
     <Compile Include="ECS\Components\Colliders\HurtCollider.cs" />
@@ -72,7 +70,7 @@
     <Compile Include="Networking\PacketIO\NewPlayerPacketIO.cs" />
     <Compile Include="Networking\PacketIO\PlayerPositionPacketIO.cs" />
     <Compile Include="Networking\PacketIO\UpdatePlayerPositionPacketIO.cs" />
-    <Compile Include="PacketType.cs" />
+    <Compile Include="Networking\PacketType.cs" />
     <Compile Include="PlayerData.cs" />
     <Compile Include="Projectiles\ProjectileData.cs" />
     <Compile Include="Projectiles\ProjectileType.cs" />

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Lidgren.Network;
 using MultiplayerShooter.Library;
+using MultiplayerShooter.Library.Networking;
 using MultiplayerShooter.Library.Networking.PacketIO;
 using MultiplayerShooter.Library.Projectiles;
 using Nez;
@@ -93,13 +94,7 @@ namespace MultiplayerShooter.Client.Managers
 
                             foreach (var player in data.OtherPlayers)
                             {
-                                Players[player.Id] =
-                                    new PlayerData
-                                    {
-                                        Id = player.Id,
-                                        PositionX = player.PositionX,
-                                        PositionY = player.PositionY
-                                    };
+                                Players[player.Id] = player;
 
                                 Console.WriteLine($"Already connected player with id {player.Id}");
                                 OnPlayerAdded?.Invoke(Players[player.Id]);

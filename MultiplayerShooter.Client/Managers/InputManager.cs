@@ -42,12 +42,12 @@ namespace MultiplayerShooter.Client.Managers
             
             _attackButton = new VirtualButton();
             _attackButton
-                .addKeyboardKey(Keys.A)
+                .addKeyboardKey(Keys.Z)
                 .addGamePadButton(0, Buttons.X);
 
             _jumpButton = new VirtualButton();
             _jumpButton
-                .addKeyboardKey(Keys.W)
+                .addKeyboardKey(Keys.X)
                 .addGamePadButton(0, Buttons.A);
 
             _upButton = new VirtualButton();

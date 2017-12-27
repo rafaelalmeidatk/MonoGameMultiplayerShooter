@@ -17,11 +17,11 @@ namespace MultiplayerShooter.Server
         public List<ProjectileData> Projectiles { get; set; }
 
         // Task
-        private CancellationTokenSource _cancellationTokenSource;
+        private readonly CancellationTokenSource _cancellationTokenSource;
         private Task _task;
 
         // Server
-        private Server _server;
+        private readonly Server _server;
         
         public GameMap(Server server)
         {

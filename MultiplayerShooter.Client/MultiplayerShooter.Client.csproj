@@ -49,9 +49,6 @@
     <Compile Include="Components\Player\PlayerComponent.cs" />
     <Compile Include="Components\Player\PlayerController.cs" />
     <Compile Include="Components\Player\PlayerStates.cs" />
-    <Compile Include="Components\Windows\TextWindowComponent.cs" />
-    <Compile Include="Components\Windows\Windowskin.cs" />
-    <Compile Include="Components\Windows\WindowSprite.cs" />
     <Compile Include="ContentPathGenerator.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -61,14 +58,10 @@
     <Compile Include="GameMain.cs" />
     <Compile Include="Managers\InputManager.cs" />
     <Compile Include="Managers\NetworkManager.cs" />
-    <Compile Include="Managers\SystemManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scenes\SceneMap.cs" />
-    <Compile Include="Systems\BattleSystem.cs" />
     <Compile Include="Systems\CameraSystem.cs" />
-    <Compile Include="Systems\CollisorsSystem.cs" />
-    <Compile Include="Systems\HitscanSystem.cs" />
     <Compile Include="Systems\ProjectilesSystem.cs" />
   </ItemGroup>
   <ItemGroup>

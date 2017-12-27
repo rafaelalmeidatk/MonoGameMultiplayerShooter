@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Lidgren.Network;
 using MultiplayerShooter.Library;
+using MultiplayerShooter.Library.Networking;
 using MultiplayerShooter.Library.Networking.PacketIO;
 
 namespace MultiplayerShooter.Server.Commands
